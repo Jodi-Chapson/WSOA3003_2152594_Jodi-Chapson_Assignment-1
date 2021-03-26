@@ -10,6 +10,7 @@ public class CharacterMovement : MonoBehaviour
     public Rigidbody2D rb;
     public float Speed;
     public float percentMod;
+    public GameObject sprite;
     
 
     void Start()
@@ -59,11 +60,12 @@ public class CharacterMovement : MonoBehaviour
 
         if (rb.velocity.x > 0)
         {
-            this.transform.eulerAngles = new Vector3(0, 0, 0);
+            
+            sprite.transform.eulerAngles = new Vector3(0, 0, 0);
         }
         else if (rb.velocity.x < 0)
         {
-            this.transform.eulerAngles = new Vector3(0, 180, 0);
+            sprite.transform.eulerAngles = new Vector3(0, 180, 0);
         }
 
     }

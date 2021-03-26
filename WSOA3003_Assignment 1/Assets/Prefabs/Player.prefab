@@ -181,8 +181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 8786513235961159781}
-  Speed: 8
+  Speed: 10
   percentMod: 0.8
+  sprite: {fileID: 6881463527343775315}
 --- !u!50 &8786513235961159781
 Rigidbody2D:
   serializedVersion: 4
@@ -227,10 +228,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6881463527952901528}
     m_Modifications:
+    - target: {fileID: 4747399788345183440, guid: 8cd97ea6243b9944f8fda509877713d4,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6903123619018697077, guid: 8cd97ea6243b9944f8fda509877713d4,
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684203362454220156, guid: 8cd97ea6243b9944f8fda509877713d4,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7971649795765681098, guid: 8cd97ea6243b9944f8fda509877713d4,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8334337519504381486, guid: 8cd97ea6243b9944f8fda509877713d4,
         type: 3}
