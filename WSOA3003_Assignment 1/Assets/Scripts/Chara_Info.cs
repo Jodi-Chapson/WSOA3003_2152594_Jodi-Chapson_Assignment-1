@@ -23,4 +23,7 @@ public class Chara_Info : MonoBehaviour
     //    maxHP = maxHP * level;
     //}
 
+
+    
+
 }
