@@ -11,6 +11,9 @@ public class Chara_Info : MonoBehaviour
     public int maxHP;
     public int currentHP;
 
+
+    int fightcounter = 0;
+
     //public void Start()
     //{
     //    damage = damage * level;
@@ -21,6 +24,20 @@ public class Chara_Info : MonoBehaviour
     {
 
     }
-    
+
+
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Debug.Log("fight fight fight!" + fightcounter);
+
+            fightcounter += 1;
+
+        }
+    }
+
 
 }
