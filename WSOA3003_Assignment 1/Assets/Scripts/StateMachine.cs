@@ -17,9 +17,15 @@ public class StateMachine : MonoBehaviour
 	public CharacterMovement playermove;
 	public CamController cam;
 	public Animator fadeanim;
+	public BattleMenu BM;
+	public GameObject key, support;
 
 
-	public GameObject battlemenu;
+	public GameObject door;
+	public Sprite openeddoor;
+	public GameObject endscreen;
+	public Support supp;
+	
 
 
 	public void Start()
@@ -38,7 +44,7 @@ public class StateMachine : MonoBehaviour
 
 		fadeanim.Play("Toblack", 0, 0.0f);
 
-		
+		BM.ToggleONBATTLEHUD();
 
 		cam.CamFollow = false;
 		playerlastPos = player.transform.position;
@@ -61,21 +67,27 @@ public class StateMachine : MonoBehaviour
 
 		state = BattleState.PLAYERTURN;
 
-		//PlayerTurn();
+		PlayerTurn();
 	}
 
 	public void PlayerTurn()
 	{
-		battlemenu.SetActive(true);
+		BM.ToggleBaseorBack();
+
+
 	}
 
-
-	IEnumerator Flee ()
+	public void ToggleFlee()
+	{
+		StartCoroutine(Flee());
+	}
+	public IEnumerator Flee ()
 	{
 		yield return new WaitForSeconds (0.3f);
 
 		fadeanim.Play("Toblack", 0, 0.0f);
 
+		BM.ToggleOFFALLMenus();
 
 		//player.transform.position = playerlastPos;
 		enemy.transform.position = enemylastPos;
@@ -83,7 +95,8 @@ public class StateMachine : MonoBehaviour
 		cam.CamFollow = true;
 		cam.transform.position = camlastpos;
 
-		Vector3 newpos = new Vector3((-enemylastPos.x + 2*playerlastPos.x), (-enemylastPos.y + 2*playerlastPos.y), 0); 
+		Vector3 newpos = new Vector3((-enemylastPos.x + 2*playerlastPos.x), (-enemylastPos.y + 2*playerlastPos.y), 0);
+		playerinfo.currentHP -= 1;
 		
 		//a basic highschool maths formula that took me way too long to get haha
 		player.transform.position = newpos;
@@ -100,101 +113,179 @@ public class StateMachine : MonoBehaviour
 
 
 	}
-
-
-	public void Update()
+	
+	public void toggleattack(int type)
 	{
-		if (Input.GetKeyDown("space"))
+		if (type == 1)
 		{
-			StartCoroutine(Flee());
+			StartCoroutine(PlayerAttack()); 
+		}
+		else if (type == 2)
+		{
+			StartCoroutine(WaterAttack());
+		}
+
+			
+
+		
+	}
+
+	public IEnumerator PlayerAttack()
+	{
+		yield return new WaitForSeconds(1f);
+
+		BM.ToggleOFFALLMenus();
+		enemyinfo.currentHP -= playerinfo.damage;
+
+		yield return new WaitForSeconds(1f);
+
+
+		if (enemyinfo.currentHP <= 0)
+		{
+			state = BattleState.END;
+			StartCoroutine(EndFight(1));
+
+		}
+		else
+		{
+			state = BattleState.ENEMYTURN;
+			StartCoroutine(EnemyAttack());
+		}
+
+	}
+
+	public IEnumerator WaterAttack()
+	{
+		yield return new WaitForSeconds(1f);
+
+		BM.ToggleOFFALLMenus();
+		if (enemyinfo.type == 1)
+		{
+			enemyinfo.currentHP -= playerinfo.damage*2;
+		}
+		else
+		{
+			enemyinfo.currentHP -= playerinfo.damage + (int) playerinfo.damage/2;
+		}
+
+
+		yield return new WaitForSeconds(1f);
+
+
+		if (enemyinfo.currentHP <= 0)
+		{
+			state = BattleState.END;
+			StartCoroutine(EndFight(1));
+
+		}
+		else
+		{
+			state = BattleState.ENEMYTURN;
+			StartCoroutine(EnemyAttack());
+			
+			
 		}
 	}
 
 
+	public IEnumerator EnemyAttack()
+	{
+		yield return new WaitForSeconds(1f);
 
-	//IEnumerator PlayerAttack()
-	//{
-	//	bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
+		playerinfo.currentHP -= enemyinfo.damage;
 
-	//	enemyHUD.SetHP(enemyUnit.currentHP);
-	//	dialogueText.text = "The attack is successful!";
 
-	//	yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(1f);
 
-	//	if (isDead)
-	//	{
-	//		state = BattleState.WON;
-	//		EndBattle();
-	//	}
-	//	else
-	//	{
-	//		state = BattleState.ENEMYTURN;
-	//		StartCoroutine(EnemyTurn());
-	//	}
-	//}
 
-	//IEnumerator EnemyTurn()
-	//{
-	//	dialogueText.text = enemyUnit.unitName + " attacks!";
+		if (playerinfo.currentHP <= 0)
+		{
+			state = BattleState.END;
+			StartCoroutine(EndFight(2));
+		}
+		else
+		{
+			state = BattleState.PLAYERTURN;
+			PlayerTurn();
+		}
 
-	//	yield return new WaitForSeconds(1f);
 
-	//	bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
+	}
 
-	//	playerHUD.SetHP(playerUnit.currentHP);
 
-	//	yield return new WaitForSeconds(1f);
 
-	//	if (isDead)
-	//	{
-	//		state = BattleState.LOST;
-	//		EndBattle();
-	//	}
-	//	else
-	//	{
-	//		state = BattleState.PLAYERTURN;
-	//		PlayerTurn();
-	//	}
+	public IEnumerator EndFight(int conclusion)
+	{
+		yield return new WaitForSeconds(0.3f);
 
-	//}
+		fadeanim.Play("Toblack", 0, 0.0f);
 
-	//void EndBattle()
-	//{
-	//	if (state == BattleState.WON)
-	//	{
-	//		dialogueText.text = "You won the battle!";
-	//	}
-	//	else if (state == BattleState.LOST)
-	//	{
-	//		dialogueText.text = "You were defeated.";
-	//	}
-	//}
+		BM.ToggleOFFALLMenus();
+		BM.ToggleOFFBATTLEHUD();
 
-	//void PlayerTurn()
-	//{
-	//	dialogueText.text = "Choose an action:";
-	//}
+		if (conclusion == 1)
+		{
+			if (enemyinfo.type == 1)
+			{
+				//drop elemental
+				supp.canfollow = true;
+				BM.Togglespecialskill();
 
-	//IEnumerator PlayerHeal()
-	//{
-	//	playerUnit.Heal(5);
+			}
+			else if (enemyinfo.type == 2)
+			{
+				UnlockDoor();
 
-	//	playerHUD.SetHP(playerUnit.currentHP);
-	//	dialogueText.text = "You feel renewed strength!";
+				yield return new WaitForSeconds(0.5f);
+				endscreen.SetActive(true);
 
-	//	yield return new WaitForSeconds(2f);
+			}
 
-	//	state = BattleState.ENEMYTURN;
-	//	StartCoroutine(EnemyTurn());
-	//}
 
-	//public void OnAttackButton()
-	//{
-	//	if (state != BattleState.PLAYERTURN)
-	//		return;
+			player.transform.position = playerlastPos;
+			Destroy(enemy);
+			playermove.canmove = true;
+			cam.CamFollow = true;
+			cam.transform.position = camlastpos;
 
-	//	StartCoroutine(PlayerAttack());
-	//}
+		}
+		else if (conclusion == 2)
+		{
+
+			endscreen.SetActive(true);
+		}
+
+
+
+
+		yield return new WaitForSeconds(0.1f);
+
+		fadeanim.Play("Fadeout", 0, 0.0f);
+
+		yield return new WaitForSeconds(0.5f);
+
+
+		state = BattleState.OUTCOMBAT;
+
+
+		
+		
+
+
+	}
+
+	public void UnlockDoor()
+	{
+		door.GetComponent<SpriteRenderer>().sprite = openeddoor;
+
+		
+	}
+
+	public void End()
+	{
+		endscreen.SetActive(true);
+	}
+	
 
 
 }
