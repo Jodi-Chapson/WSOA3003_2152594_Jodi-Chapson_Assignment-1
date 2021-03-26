@@ -5,7 +5,6 @@ using UnityEngine;
 public class Chara_Info : MonoBehaviour
 {
     public string UnitName;
-    public int level = 1; //is multiplier for all other stats.
 
     public int type; //types: 0 = protag, 1 = base enemy, 2 = elemental enemy
     public int element;  // 0 = none, 1 = fire, 2 = water
@@ -23,7 +22,10 @@ public class Chara_Info : MonoBehaviour
     //    maxHP = maxHP * level;
     //}
 
+    public void TakeDamage()
+    {
 
+    }
     
 
 }
