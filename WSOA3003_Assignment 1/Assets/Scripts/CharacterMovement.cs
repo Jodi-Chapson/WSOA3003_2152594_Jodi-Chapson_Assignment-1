@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
+    //script for casual character movement
+    
     [Header("References")]
     public Rigidbody2D rb;
     public float Speed;
-    public ParticleSystem vfx;
+    public float percentMod;
+    
 
     void Start()
     {
@@ -28,17 +31,25 @@ public class CharacterMovement : MonoBehaviour
 
             Flip();
         }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
        
 
         if (Input.GetKey("w"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, Speed);
+            rb.velocity = new Vector2(rb.velocity.x, Speed * percentMod);
         }
         else if (Input.GetKey("s"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, -Speed);
+            rb.velocity = new Vector2(rb.velocity.x, -Speed * percentMod);
         }
-        
+        else
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+        }
+
     }
 
     public void Flip()
