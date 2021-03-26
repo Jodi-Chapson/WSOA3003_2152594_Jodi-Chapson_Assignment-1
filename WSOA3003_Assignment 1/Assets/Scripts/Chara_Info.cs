@@ -10,9 +10,10 @@ public class Chara_Info : MonoBehaviour
     public int damage;
     public int maxHP;
     public int currentHP;
+    public StateMachine gamestate;
 
 
-    int fightcounter = 0;
+    
 
     //public void Start()
     //{
@@ -32,9 +33,13 @@ public class Chara_Info : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("fight fight fight!" + fightcounter);
 
-            fightcounter += 1;
+
+            gamestate.state = BattleState.START;
+            StartCoroutine(gamestate.BattleSetup());
+            gamestate.enemyinfo = this.gameObject.GetComponent<Chara_Info>();
+            gamestate.enemy = this.gameObject;
+
 
         }
     }

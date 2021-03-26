@@ -11,44 +11,48 @@ public class CharacterMovement : MonoBehaviour
     public float Speed;
     public float percentMod;
     public GameObject sprite;
-    
+    public bool canmove;
 
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
+        canmove = true;
     }
 
     public void FixedUpdate()
     {
 
-        if (Input.GetKey("d"))
+        if (canmove)
         {
-            rb.velocity = new Vector2(Speed, rb.velocity.y);
-            Flip();
-        }
-        else if (Input.GetKey("a"))
-        {
-            rb.velocity = new Vector2(-Speed, rb.velocity.y);
+            if (Input.GetKey("d"))
+            {
+                rb.velocity = new Vector2(Speed, rb.velocity.y);
+                Flip();
+            }
+            else if (Input.GetKey("a"))
+            {
+                rb.velocity = new Vector2(-Speed, rb.velocity.y);
 
-            Flip();
-        }
-        else
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y);
-        }
-       
+                Flip();
+            }
+            else
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
 
-        if (Input.GetKey("w"))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, Speed * percentMod);
-        }
-        else if (Input.GetKey("s"))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, -Speed * percentMod);
-        }
-        else
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+
+            if (Input.GetKey("w"))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, Speed * percentMod);
+            }
+            else if (Input.GetKey("s"))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -Speed * percentMod);
+            }
+            else
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+            }
         }
 
     }
